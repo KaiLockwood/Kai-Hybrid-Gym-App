@@ -31,7 +31,7 @@ function RunLogModal({ onSave, onClose, tier, startDate }) {
   const suggested = getSuggestedRun(tier, startDate)
   const [runType, setRunType] = useState(suggested?.label?.toLowerCase().includes('long') ? 'long' : 'easy')
   const [duration, setDuration] = useState('')
-  const [distance, setDistance] = useState(suggested?.dist?.replace('mi', '').trim() || '')
+  const [distance, setDistance] = useState(suggested?.dist?.replace('km', '').trim() || '')
   const [notes, setNotes] = useState('')
   const [rpe, setRpe] = useState(3)
 
@@ -98,13 +98,13 @@ function RunLogModal({ onSave, onClose, tier, startDate }) {
             />
           </div>
           <div>
-            <label className="block text-xs text-gray-400 font-semibold mb-2 uppercase tracking-wider">Distance (mi)</label>
+            <label className="block text-xs text-gray-400 font-semibold mb-2 uppercase tracking-wider">Distance (km)</label>
             <input
               type="number"
               step="0.1"
               value={distance}
               onChange={(e) => setDistance(e.target.value)}
-              placeholder="5.2"
+              placeholder="8.0"
               className="w-full bg-gray-800 border border-gray-700 rounded-xl px-3 py-2.5 text-white focus:outline-none focus:border-orange-500 transition-colors"
             />
           </div>
@@ -190,7 +190,7 @@ function ExerciseRow({ exercise, sets, onChange }) {
                   type="number"
                   value={set.weight}
                   onChange={(e) => updateSet(idx, 'weight', e.target.value)}
-                  placeholder="lbs"
+                  placeholder="kg"
                   className="w-full bg-gray-700 rounded-lg px-2 py-1.5 text-white text-xs focus:outline-none focus:ring-1 focus:ring-orange-500"
                 />
               </div>
@@ -213,7 +213,7 @@ function ExerciseRow({ exercise, sets, onChange }) {
         ))}
       </div>
       <div className="flex gap-8 mt-1 px-6">
-        <span className="text-[10px] text-gray-600">Weight (lbs)</span>
+        <span className="text-[10px] text-gray-600">Weight (kg)</span>
         <span className="text-[10px] text-gray-600">Reps</span>
       </div>
     </div>
@@ -400,7 +400,7 @@ function LogCard({ entry, onDelete }) {
         </div>
         <div className="flex items-center gap-3 flex-shrink-0">
           {isRun && entry.distance && (
-            <span className="text-sm font-bold text-orange-400">{entry.distance}mi</span>
+            <span className="text-sm font-bold text-orange-400">{entry.distance}km</span>
           )}
           {isRun && entry.duration && (
             <span className="text-xs text-gray-500">{entry.duration}min</span>
@@ -427,7 +427,7 @@ function LogCard({ entry, onDelete }) {
                   <StatPill icon={<Clock size={12} />} label="Duration" value={`${entry.duration}min`} />
                 )}
                 {entry.distance && (
-                  <StatPill icon={<MapPin size={12} />} label="Distance" value={`${entry.distance}mi`} />
+                  <StatPill icon={<MapPin size={12} />} label="Distance" value={`${entry.distance}km`} />
                 )}
                 {entry.rpe && (
                   <StatPill icon={<Star size={12} />} label="RPE" value={`${entry.rpe}/5`} />
@@ -443,7 +443,7 @@ function LogCard({ entry, onDelete }) {
                     <div className="flex flex-wrap gap-1">
                       {ex.sets.map((s, j) => (
                         <span key={j} className="text-[10px] bg-gray-700 text-gray-300 rounded px-1.5 py-0.5">
-                          {s.weight}lbs × {s.reps}
+                          {s.weight}kg × {s.reps}
                         </span>
                       ))}
                     </div>

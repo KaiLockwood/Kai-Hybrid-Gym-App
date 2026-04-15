@@ -251,7 +251,7 @@ export default function Guide() {
           <div className="mt-3">
             <RunTable tier={runTier} />
           </div>
-          <p className="text-xs text-gray-600 mt-2">Long run distances shown in blue. Tier 3 Run 3 values are time-based targets.</p>
+          <p className="text-xs text-gray-600 mt-2">Long run distances shown in blue (km). Tier 3 Run 3 values are time-based targets.</p>
         </Section>
 
         {/* Tips */}
@@ -286,7 +286,7 @@ export default function Guide() {
               {
                 title: 'Footwear & Kit',
                 color: 'text-pink-400',
-                body: 'Use dedicated running shoes (replaced every 400–500 miles). Rotate between two pairs if possible to extend lifespan and let foam decompress. Compression gear can aid recovery on back-to-back training days.',
+                body: 'Use dedicated running shoes (replaced every 600–800 km). Rotate between two pairs if possible to extend lifespan and let foam decompress. Compression gear can aid recovery on back-to-back training days.',
               },
             ].map((tip, i) => (
               <div key={i} className="bg-gray-800/60 rounded-xl p-3">

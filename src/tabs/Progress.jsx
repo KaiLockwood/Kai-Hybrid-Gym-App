@@ -37,7 +37,7 @@ function StatCard({ icon, label, value, sub, color = 'text-orange-500' }) {
 
 // ─── Weekly Mileage Chart ──────────────────────────────────────────────────────
 
-function WeeklyMileageChart({ logs }) {
+function WeeklyKmChart({ logs }) {
   const mondays = getLastNWeekMondays(8)
 
   const data = mondays.map((mondayISO) => {
@@ -46,7 +46,7 @@ function WeeklyMileageChart({ logs }) {
     sunday.setDate(sunday.getDate() + 6)
     sunday.setHours(23, 59, 59, 999)
 
-    const weekMiles = logs
+    const weekKm = logs
       .filter((l) => l.type === 'run' && l.distance)
       .filter((l) => {
         const d = parseISODate(l.date)
@@ -54,20 +54,20 @@ function WeeklyMileageChart({ logs }) {
       })
       .reduce((acc, l) => acc + (l.distance || 0), 0)
 
-    const label = new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric' }).format(monday)
-    return { week: label, miles: parseFloat(weekMiles.toFixed(1)) }
+    const label = new Intl.DateTimeFormat('en-AU', { month: 'short', day: 'numeric' }).format(monday)
+    return { week: label, km: parseFloat(weekKm.toFixed(1)) }
   })
 
   return (
     <div className="bg-gray-900 border border-gray-800 rounded-2xl p-4 mb-4">
-      <h3 className="text-sm font-bold text-white mb-4">Weekly Mileage</h3>
+      <h3 className="text-sm font-bold text-white mb-4">Weekly Distance (km)</h3>
       <ResponsiveContainer width="100%" height={160}>
         <BarChart data={data} margin={{ top: 0, right: 0, left: -20, bottom: 0 }}>
           <CartesianGrid strokeDasharray="3 3" stroke="#1f2937" vertical={false} />
           <XAxis dataKey="week" tick={{ fill: '#6b7280', fontSize: 10 }} tickLine={false} axisLine={false} />
           <YAxis tick={{ fill: '#6b7280', fontSize: 10 }} tickLine={false} axisLine={false} />
-          <Tooltip content={<CustomTooltip unit="mi" />} cursor={{ fill: 'rgba(249,115,22,0.08)' }} />
-          <Bar dataKey="miles" fill="#f97316" radius={[4, 4, 0, 0]} name="Miles" />
+          <Tooltip content={<CustomTooltip unit="km" />} cursor={{ fill: 'rgba(249,115,22,0.08)' }} />
+          <Bar dataKey="km" fill="#f97316" radius={[4, 4, 0, 0]} name="km" />
         </BarChart>
       </ResponsiveContainer>
     </div>
@@ -155,20 +155,20 @@ function RunTrendChart({ logs }) {
   if (runLogs.length < 2) return null
 
   const data = runLogs.map((l) => ({
-    date: new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric' }).format(parseISODate(l.date)),
+    date: new Intl.DateTimeFormat('en-AU', { month: 'short', day: 'numeric' }).format(parseISODate(l.date)),
     distance: l.distance,
     subtype: l.subtype,
   }))
 
   return (
     <div className="bg-gray-900 border border-gray-800 rounded-2xl p-4 mb-4">
-      <h3 className="text-sm font-bold text-white mb-4">Run Distance Trend</h3>
+      <h3 className="text-sm font-bold text-white mb-4">Run Distance Trend (km)</h3>
       <ResponsiveContainer width="100%" height={140}>
         <LineChart data={data} margin={{ top: 0, right: 0, left: -20, bottom: 0 }}>
           <CartesianGrid strokeDasharray="3 3" stroke="#1f2937" />
           <XAxis dataKey="date" tick={{ fill: '#6b7280', fontSize: 10 }} tickLine={false} axisLine={false} />
           <YAxis tick={{ fill: '#6b7280', fontSize: 10 }} tickLine={false} axisLine={false} />
-          <Tooltip content={<CustomTooltip unit="mi" />} />
+          <Tooltip content={<CustomTooltip unit="km" />} />
           <Line
             type="monotone"
             dataKey="distance"
@@ -191,11 +191,11 @@ export default function Progress({ logs }) {
   const gymLogs = logs.filter((l) => l.type === 'gym')
 
   const totalRunTime = runLogs.reduce((acc, l) => acc + (l.duration || 0), 0)
-  const totalMiles = runLogs.reduce((acc, l) => acc + (l.distance || 0), 0)
+  const totalKm = runLogs.reduce((acc, l) => acc + (l.distance || 0), 0)
 
-  // MPW: average miles per week over last 4 weeks
+  // KPW: average km per week over last 4 weeks
   const mondays4 = getLastNWeekMondays(4)
-  const weeklyMiles = mondays4.map((mondayISO) => {
+  const weeklyKm = mondays4.map((mondayISO) => {
     const monday = parseISODate(mondayISO)
     const sunday = new Date(monday)
     sunday.setDate(sunday.getDate() + 6)
@@ -208,8 +208,8 @@ export default function Progress({ logs }) {
       })
       .reduce((acc, l) => acc + l.distance, 0)
   })
-  const mpw = weeklyMiles.length > 0
-    ? (weeklyMiles.reduce((a, b) => a + b, 0) / weeklyMiles.length).toFixed(1)
+  const kpw = weeklyKm.length > 0
+    ? (weeklyKm.reduce((a, b) => a + b, 0) / weeklyKm.length).toFixed(1)
     : 0
 
   const { current: streakCurrent, longest: streakLongest } = calcStreaks(logs)
@@ -229,7 +229,7 @@ export default function Progress({ logs }) {
             icon={<Footprints size={20} />}
             label="Total Runs"
             value={runLogs.length}
-            sub={`${totalMiles.toFixed(1)} mi total`}
+            sub={`${totalKm.toFixed(1)} km total`}
             color="text-orange-500"
           />
           <StatCard
@@ -240,8 +240,8 @@ export default function Progress({ logs }) {
           />
           <StatCard
             icon={<TrendingUp size={20} />}
-            label="Avg MPW"
-            value={`${mpw}mi`}
+            label="Avg KPW"
+            value={`${kpw}km`}
             sub="4-week average"
             color="text-green-400"
           />
@@ -275,7 +275,7 @@ export default function Progress({ logs }) {
         </div>
 
         {/* Charts */}
-        <WeeklyMileageChart logs={logs} />
+        <WeeklyKmChart logs={logs} />
         <GymVolumeChart logs={logs} />
         <RunTrendChart logs={logs} />
 

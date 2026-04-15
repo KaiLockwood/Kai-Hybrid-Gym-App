@@ -9,8 +9,6 @@ import Log from './tabs/Log'
 import Progress from './tabs/Progress'
 import Guide from './tabs/Guide'
 
-const TAB_TITLES = ['Schedule', 'Log', 'Progress', 'Guide']
-
 export default function App() {
   const [tier, setTier] = useLocalStorage('hb_tier', null)
   const [startDate, setStartDate] = useLocalStorage('hb_start_date', null)
@@ -61,12 +59,15 @@ export default function App() {
   }
 
   return (
-    <div className="flex justify-center min-h-screen bg-gray-950">
-      <div className="w-full max-w-[430px] min-h-screen bg-gray-950 relative flex flex-col">
-        {/* Top bar */}
-        <div className="flex items-center justify-between px-4 pt-safe pt-4 pb-1 flex-shrink-0">
+    <div className="flex justify-center min-h-screen bg-gray-950 overflow-x-hidden">
+      <div className="w-full max-w-[430px] min-h-screen bg-gray-950 relative flex flex-col overflow-x-hidden">
+        {/* Top bar — respects Dynamic Island / status bar via safe-area-inset-top */}
+        <div
+          className="flex items-center justify-between px-4 pb-1 flex-shrink-0"
+          style={{ paddingTop: 'max(env(safe-area-inset-top), 16px)' }}
+        >
           <div className="flex items-center gap-2">
-            <div className="w-6 h-6 rounded-md bg-orange-500 flex items-center justify-center">
+            <div className="w-6 h-6 rounded-md bg-orange-500 flex items-center justify-center flex-shrink-0">
               <span className="text-white text-[10px] font-black">HB</span>
             </div>
             <span className="text-white font-black text-sm tracking-tight">Hybrid Blueprint</span>
@@ -74,14 +75,18 @@ export default function App() {
           <button
             onClick={() => setShowSettings(true)}
             className="p-2 text-gray-500 hover:text-white hover:bg-gray-800 rounded-full transition-colors"
+            style={{ minWidth: 44, minHeight: 44 }}
           >
             <Settings size={20} />
           </button>
         </div>
 
-        {/* Tab content */}
+        {/* Tab content — pb accounts for nav height + home indicator */}
         <div className="flex-1 overflow-hidden">
-          <div className="h-full overflow-y-auto pb-20">
+          <div
+            className="h-full overflow-y-auto"
+            style={{ paddingBottom: 'calc(4rem + env(safe-area-inset-bottom) + 16px)' }}
+          >
             {activeTab === 0 && (
               <Schedule
                 tier={tier}
